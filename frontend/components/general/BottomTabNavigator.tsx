@@ -9,7 +9,7 @@ import UserIndex from 'app/userManagement/userIndex';
 
 const Tab = createBottomTabNavigator();
 
-const BottomTabNavigator = () => {
+const  BottomTabNavigator = () => {
 
   return (
     <Tab.Navigator

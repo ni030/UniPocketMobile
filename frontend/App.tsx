@@ -8,7 +8,6 @@ import './global.css';
 import SignUp from './app/auth/signup';
 import SignIn from 'app/auth/signin';
 import ForgotPassword from 'app/auth/forgotPassword';
-import Home from 'app/home';
 import BottomTabNavigator from 'components/general/BottomTabNavigator';
 import ReportForm from 'app/reportFacilities/reportForm';
 import ReportFeedback from 'app/reportFacilities/reportFeedback';
@@ -22,7 +21,7 @@ export default function App() {
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="MainApp">
+        <Stack.Navigator initialRouteName="SignIn">
           <Stack.Screen name="SignUp" component={SignUp} options={{ headerShown: false }} />
           <Stack.Screen name="SignIn" component={SignIn} options={{ headerShown: false }} />
           <Stack.Screen name="ForgotPassword" component={ForgotPassword} />

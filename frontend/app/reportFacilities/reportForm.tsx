@@ -1,17 +1,67 @@
-import React, { useState } from 'react';
-import { Image, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import * as ImagePicker from 'expo-image-picker';
 import { Picker } from '@react-native-picker/picker';
+import { createComplaint } from 'services/complaintsServices';
+import Loader from 'components/Loader';
+import { getUserDetails } from 'services/usersServices';
+import { useNavigation } from '@react-navigation/native';
 
 const ReportForm = () => {
+  const [loading, setLoading] = useState(false);
   const [personalDetailsExpanded, setPersonalDetailsExpanded] = useState(true);
+  const navigation = useNavigation<any>();
+  const [userData, setUserData] = useState({
+    name: '',
+    phoneNum: '',
+    email: '',
+    block: '',
+    room: '',
+  });
+
   const [date, setDate] = useState<Date | null>(null);
   const [type, setType] = useState('Electricity');
   const [description, setDescription] = useState('');
   const [reportImg, setReportImg] = useState<string | null>(null);
   const [showDatePicker, setShowDatePicker] = useState(false);
+
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (status !== 'granted') {
+        ToastAndroid.show('Sorry, we need camera roll permissions to make this work!', ToastAndroid.SHORT);
+      }
+      const { data } = await getUserDetails();
+      setUserData(data);
+      setLoading(false);
+    };
+    loadData();
+  }, []);
+
+
+  const handleComplaintSubmit = async () => {
+    try{
+      if(date && type && description && reportImg) {
+        setLoading(true);
+        const res = await createComplaint(date, type, description, reportImg);
+        if(res.status === 201) {
+          const complaintId = res.data.id;
+          ToastAndroid.show('Complaint submitted successfully', ToastAndroid.SHORT);
+          navigation.navigate('ReportFeedback', { complaintId });
+        }else{
+          ToastAndroid.show('Failed to submit complaint', ToastAndroid.SHORT);
+        }
+        setLoading(false);
+      } else {
+        ToastAndroid.show('Please fill in all fields', ToastAndroid.SHORT);
+      }
+    }catch(error){
+      ToastAndroid.show('Failed to submit complaint', ToastAndroid.SHORT);
+    }
+  }
 
   const handleDateChange = (event: any, selectedDate: Date | undefined) => {
     const currentDate = selectedDate || date;
@@ -34,17 +84,21 @@ const ReportForm = () => {
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true,
     });
 
-    console.log(result);
-
     if (!result.canceled) {
-      setReportImg(result.assets[0].uri);
+      const imageBase64 = `data:image/jpeg;base64,${result.assets[0].base64}`;
+
+      setReportImg(imageBase64);
     }
   };
 
   return (
     <View className='w-full h-full bg-white'>
+      {loading && (
+        <Loader/>
+      )}
       <View className='h-1/6 w-full bg-red-800 flex justify-end'>
         <Text className='text-4xl px-10 py-3 font-bold text-white'>
           Make A Report
@@ -65,10 +119,10 @@ const ReportForm = () => {
           </TouchableOpacity>
           {personalDetailsExpanded && (
             <View className='w-full h-auto flex gap-3 px-6 py-4'>
-              <Text>Name: LIM SI NI</Text>
-              <Text>Phone Num: +601753637</Text>
-              <Text>Email: limsini000@gmail.com</Text>
-              <Text>Address: 333/MA1</Text>
+              <Text>Name: {userData.name}</Text>
+              <Text>Phone Num: +60{userData.phoneNum}</Text>
+              <Text>Email: {userData.email}</Text>
+              <Text>Address: {userData.room}/{userData.block}</Text>
             </View>
           )}
         </View>
@@ -137,7 +191,7 @@ const ReportForm = () => {
                     ) : (<Text>Choose Image</Text>)}
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity className='w-full h-auto mt-2 mb-12 flex justify-center items-center' onPress={() => {}}>
+            <TouchableOpacity className='w-full h-auto mt-2 mb-12 flex justify-center items-center' onPress={handleComplaintSubmit}>
                 <Text className='w-full h-auto bg-red-800 text-white text-center p-3 rounded-lg my-4'>
                     Submit
                 </Text>
