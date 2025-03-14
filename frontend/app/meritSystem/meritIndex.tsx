@@ -1,21 +1,87 @@
-import React, { useState } from 'react';
-import { Modal, Pressable, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Modal, Pressable, ScrollView, Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome6 from '@expo/vector-icons/FontAwesome6';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import Octicons from '@expo/vector-icons/Octicons';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import { Picker } from '@react-native-picker/picker';
+import { getMeritById } from 'services/meritServices';
+import { useFocusEffect } from '@react-navigation/native';
+import Loader from 'components/Loader';
+import { checkExistingCRById, getChosenRoomById, saveChosenRoom } from 'services/chosenRoomServices';
 
 const MeritIndex = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [infoModalVisible, setInfoModalVisible] = useState(false);
   const [sortAscending, setSortAscending] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [block, setBlock] = useState('Block A');
   const [room, setRoom] = useState('');
-
   const [isRoomValid, setIsRoomValid] = useState(true);
+
+  const [meritData, setMeritData] = useState<any[]>([]);
+  const [totalMerits, setTotalMerits] = useState<number>(0);
+  const [ranking, setRanking] = useState<number>(0);
+  const [totalActivity, setTotalActivity] = useState(0);
+
+  const loadData = async () => {
+    setLoading(true);
+    const { data } = await getMeritById();
+    const sortedData = sortAscendingByEventName(data.events, sortAscending);
+    setMeritData(sortedData);
+    setTotalMerits(data.totalMerits);
+    setRanking(data.ranking);
+    setTotalActivity(data.events.length);
+    setLoading(false);
+
+  };
+  
+
+  const sortAscendingByEventName = (events: any[], ascending: boolean) => {
+    return [...events].sort((a, b) => {
+      return ascending ? a.eventName.localeCompare(b.eventName) : b.eventName.localeCompare(a.eventName);
+    });
+  };  
+  
+  useFocusEffect(
+    useCallback(() => {
+      loadData();
+    }, [])
+  );
+
+  const loadCRData = async () => {
+    const checkExisting = await checkExistingCRById();
+    if (checkExisting) {
+      const { data } = await getChosenRoomById();
+      setBlock(data.block);
+      setRoom(data.roomNum);
+    }
+
+  }
+
+  const handleChosenRoomOpen = async () => {
+    await loadCRData();
+    setModalVisible(true);
+  }
+
+  const handleSaveChosenRoom = async () => {
+    if (isRoomValid && room && block) {
+      const response = await saveChosenRoom(block, room);
+      if (response === 200) {
+        setModalVisible(false);
+        ToastAndroid.show("Room successfully saved!", ToastAndroid.LONG);
+      }
+    }
+  }
+
+  const handleUnsavedChanges = async () => {
+    await loadCRData();
+    setModalVisible(false);
+    ToastAndroid.show("Changes discarded.", ToastAndroid.LONG);
+  }
+  
   const validateRoom = (room: string) => {
     const roomRegex = /^\d{3}$/;
     return roomRegex.test(room);
@@ -28,6 +94,7 @@ const MeritIndex = () => {
 
   return (
     <View className='h-full w-full bg-white'>
+      {loading && <Loader />}
       <Modal
         animationType="slide"
         transparent={true}
@@ -40,7 +107,7 @@ const MeritIndex = () => {
             <View className='f-1/6 w-full p-2 flex flex-row justify-between items-center'>
               <Text className='text-2xl font-semibold'>Choose Room</Text>
               <Pressable
-                onPress={() => setModalVisible(!modalVisible)}>
+                onPress={handleUnsavedChanges}>
                 <FontAwesome6 name="xmark" size={18} color="black" />
               </Pressable>
             </View>
@@ -74,7 +141,7 @@ const MeritIndex = () => {
             {!isRoomValid &&
               <Text className='w-full text-left px-2 -top-2 text-red-500'>Please enter a three-digit room number.</Text>
             }
-            <TouchableOpacity className='w-full h-auto bg-rose-800 flex justify-center items-center rounded-lg p-4 my-4'>
+            <TouchableOpacity className='w-full h-auto bg-rose-800 flex justify-center items-center rounded-lg p-4 my-4' onPress={handleSaveChosenRoom}>
               <Text className='font-semibold text-white text-lg'>Save</Text>
             </TouchableOpacity>
           </View>
@@ -94,9 +161,9 @@ const MeritIndex = () => {
             <Text className='text-base font-medium'>Priority by Rank</Text>
             <Text className='text-sm'>Higher rank = higher priority (Rank 1 &gt; Rank 2 &gt; Rank 3).</Text>
             <Text className='text-base font-medium mt-2'>Room Allocation</Text>
-            <Text className='text-sm'>Rank 1: 10% of rooms</Text>
-            <Text className='text-sm'>Rank 2: 30% of rooms</Text>
-            <Text className='text-sm'>Rank 3: 60% of rooms</Text>
+            <Text className='text-sm'>Rank 1: Top 3 users with the highest merit</Text>
+            <Text className='text-sm'>Rank 2: Top 4 - 10 users with the highest merit</Text>
+            <Text className='text-sm'>Rank 3: Others users</Text>
             <Text className='text-base mt-2 font-medium'>Selection Process</Text>
             <Text className='text-sm'>Rank 1 selects first, followed by Rank 2, then Rank 3.</Text>
             <Text className='text-sm font-medium '>Once a rank's rooms are full, students must choose from the remaining options.</Text>
@@ -118,12 +185,12 @@ const MeritIndex = () => {
           <View className='w-1/2'>
             <Text className='text-xl font-semibold text-white'>Your total merit</Text>
             <View className='flex flex-row justify-start items-center'>
-              <Text className='text-4xl font-bold text-white my-2'>100 </Text>
+              <Text className='text-4xl font-bold text-white my-2'>{totalMerits} </Text>
               <Text className='text-lg font-bold text-white'>mark(s)</Text>
             </View>
           </View>
           <View>
-            <TouchableOpacity onPress={() => setModalVisible(true)}>
+            <TouchableOpacity onPress={handleChosenRoomOpen}>
               <MaterialIcons name="add-home" size={28} color="white" />
             </TouchableOpacity>
           </View>
@@ -136,37 +203,56 @@ const MeritIndex = () => {
                 <Octicons name="question" size={16} color="rgba(243,224,256,0.8)" />
               </TouchableOpacity>
             </Text>
-            <Text className='text-3xl font-semibold text-white'>1</Text>
+            <Text className='text-3xl font-semibold text-white'>{ranking}</Text>
           </View>
           <View className='w-[1.5px] h-[70px] bg-gray-100/70'></View>
           <View className='w-1/3 h-auto flex justify-center items-center'>
             <Text className='text-xl text-white'>Total Activity</Text>
-            <Text className='text-3xl font-semibold text-white'>99</Text>
+            <Text className='text-3xl font-semibold text-white'>{totalActivity}</Text>
           </View>
         </View>
       </View>
       <ScrollView className='w-full h-auto p-8'>
         <View className='h-auto w-full flex flex-row justify-between items-center'>
-          <Text className='font-semibold text-lg py-2 text-gray-100'>History</Text>
-          {sortAscending ? (
-            <MaterialCommunityIcons name="sort-alphabetical-ascending" size={22} color="black" />
-          ) : (
-            <MaterialCommunityIcons name="sort-alphabetical-descending" size={22} color="black" />
-          )}
+          <Text className='font-semibold text-lg py-2 text-gray-500'>History</Text>
+          <Pressable onPress={() => { 
+            setSortAscending(prev => {
+              const newSortOrder = !prev;
+              setMeritData(sortAscendingByEventName(meritData, newSortOrder));
+              return newSortOrder;
+            });
+          }}>
+            {sortAscending ? (
+              <MaterialCommunityIcons name="sort-alphabetical-ascending" size={22} color="black" />
+            ) : (
+              <MaterialCommunityIcons name="sort-alphabetical-descending" size={22} color="black" />
+            )}
+          </Pressable>
         </View>
-        <View className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center gap-4'>
-          <View className='flex justify-center items-center'>
-            <MaterialIcons name="sports-volleyball" size={64} color="#9f1239" />
+        {meritData.map((event: { eventName: string; date: string; role: 'Participant' | 'Committee' }, index) => {
+
+        const meritPoints = {
+          "Participant": 1,
+          "Committee": 5,
+        }
+
+        const points = meritPoints[event.role];
+        
+        return (
+          <View key={index} className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center gap-4'>
+            <View className='flex justify-center items-center'>
+              <MaterialIcons name="sports-volleyball" size={64} color="#9f1239" />
+            </View>
+            <View className='w-auto flex justify-center px-4'>
+              <Text className='text-xl font-semibold'>{event.eventName}</Text>
+              <Text className='text-base'>Date: {event.date}</Text>
+              <Text className='text-base'>Role: {event.role}</Text>
+            </View>
+            <View className='flex justify-center items-center'>
+              <Text className='text-4xl text-rose-800 font-semibold'>+ {points}</Text>
+            </View>
           </View>
-          <View className='w-auto flex justify-center px-4'>
-            <Text className='text-xl font-semibold'>Activity 1</Text>
-            <Text className='text-base'>Date: 22/02/2024</Text>
-            <Text className='text-base'>Role: Participant</Text>
-          </View>
-          <View className='flex justify-center items-center'>
-            <Text className='text-4xl text-rose-800 font-semibold'>+10</Text>
-          </View>
-        </View>
+        )})}
       </ScrollView>
     </View>
   )

@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "887718517807",
+    "project_id": "uniresidence-e1123",
+    "storage_bucket": "uniresidence-e1123.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887718517807:android:95eb9d8a7350bbcb617ada",
+        "android_client_info": {
+          "package_name": "com.anonymous.UniResidence"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "887718517807-evqp1j25agmvtaja1tvf2q4qc5u1h6jv.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.anonymous.UniResidence",
+            "certificate_hash": "525d2ca922273bae497920343f09f40da6d05670"
+          }
+        },
+        {
+          "client_id": "887718517807-d96j6efnqcr4a34tb6ib72dlb6snsin9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCI-aCDuYTJC4zLflBF_t412kghrVWD738"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "887718517807-d96j6efnqcr4a34tb6ib72dlb6snsin9.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "887718517807-9q8qh7kplu8buttsunafrlk1e4bgmkb1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.anonymous.UniResidence"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

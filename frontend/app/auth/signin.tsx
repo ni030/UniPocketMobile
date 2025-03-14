@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
-import { signInUser, signInWithGoogle } from 'services/usersServices';
+import { signInUser } from 'services/usersServices';
 import { ErrorMessage } from 'components/ErrorMessage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 
@@ -47,13 +47,25 @@ const SignIn = () => {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      const result = await signInWithGoogle();
-    } catch (error) {
-      ToastAndroid.show('Google Sign In Failed', ToastAndroid.SHORT);
-    }
-  };
+// const { promptAsync, request } = useGoogleAuth();
+
+// const handleGoogleSignIn = async () => {
+//   try {
+//     if (!request) {
+//       console.error('Request object is null or undefined');
+//       return;
+//     }
+
+//     const user = await signInWithGoogle(promptAsync);
+//     if (user) {
+//       ToastAndroid.show('Google Sign In Successful', ToastAndroid.SHORT);
+//       // navigation.navigate('MainApp');
+//     }
+//   } catch (error) {
+//     console.error('Error during Google Sign In:', error);
+//     ToastAndroid.show('Google Sign In Failed', ToastAndroid.SHORT);
+//   }
+// };
 
   return (
     <View className="flex h-full w-full items-center justify-start ">
@@ -93,7 +105,7 @@ const SignIn = () => {
           <Text className="text-xl font-bold text-white">Login</Text>
         </TouchableOpacity>
 
-        <View className="flex flex-row items-center">
+        {/* <View className="flex flex-row items-center">
           <View className="ml-8 h-[3px] flex-1 bg-gray-300/70"></View>
           <View>
             <Text className="w-auto p-3 text-center text-gray-500/70">Or Continue with Google</Text>
@@ -101,12 +113,10 @@ const SignIn = () => {
           <View className="mr-8 h-[3px] flex-1 bg-gray-300/70"></View>
         </View>
         <TouchableOpacity
-          onPress={() => {
-            console.log('Google');
-          }}
+          onPress={handleGoogleSignIn}
           className="flex h-14 w-3/5 items-center justify-center rounded-lg border-2 border-rose-800 ">
           <Text className="text-xl font-bold text-rose-800">Google</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text className="w-full text-center">
           Don't have an account?{' '}
           <Text className="underline" onPress={() => navigation.navigate('SignUp')}>

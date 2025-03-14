@@ -5,6 +5,6 @@ const { withNativeWind } = require('nativewind/metro');
 const config = getDefaultConfig(__dirname);
 
 //firebase
-config.resolver.sourceExts.push('jsx', 'js', 'ts', 'tsx');
+config.resolver.sourceExts.push('cjs', 'jsx', 'js', 'ts', 'tsx');
 
 module.exports = withNativeWind(config, { input: './global.css' });

@@ -1,17 +1,37 @@
-import React from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { ScrollView, View, StyleSheet, ImageSourcePropType, Image, TouchableOpacity, Text } from 'react-native';
 import { ImageSlider } from 'react-native-image-slider-banner';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Entypo from '@expo/vector-icons/Entypo';
 import AntDesign from '@expo/vector-icons/AntDesign';
+import { getMeritById } from 'services/meritServices';
+import Loader from 'components/Loader';
 
 const Home = () => {
     const navigation = useNavigation<any>()
+    const [loading, setLoading] = useState(false);
+    const [totalMerit, setTotalMerit] = useState(0);
+
+    const loadData = async () => {
+        setLoading(true);
+        const { data } = await getMeritById();
+        setTotalMerit(data.totalMerits)
+        setLoading(false);
+
+      };
+      
+      useFocusEffect(
+        useCallback(() => {
+          loadData();
+        }, [])
+      );
+
   return (
     <ScrollView className='h-full w-full bg-white'>
+      { loading && <Loader /> }
       <View className='rounded-xl w-full' >
         <ImageSlider 
           data={[
@@ -57,7 +77,7 @@ const Home = () => {
             <View className='w-2/3 h-auto flex justify-center items-left py-4 '>
               <Text className='text-xl font-semibold text-white'>Your total merit</Text>
               <View className='flex flex-row justify-start items-center'>
-                <Text className='text-4xl font-bold text-white my-2'>100 </Text>
+                <Text className='text-4xl font-bold text-white my-2'>{totalMerit} </Text>
                 <Text className='text-lg font-bold text-white'>mark(s)</Text>
               </View>
               {/* <Text className='text-sm text-gray-50 '>View details of merit marks</Text> */}

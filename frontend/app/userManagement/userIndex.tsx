@@ -82,8 +82,7 @@ const UserIndex = () => {
     try {
       const res = await changePassword(currentPassword, newPassword);
       ToastAndroid.show('Password updated successfully', ToastAndroid.SHORT);
-
-      // setChangePasswordModalVisible(!changePasswordModalVisible);
+      setChangePasswordModalVisible(!changePasswordModalVisible);
     } catch (error) {
       ToastAndroid.show(
         'Password update failed. Please Ensure enter a valid password',

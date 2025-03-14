@@ -1,7 +1,8 @@
 {
   "expo": {
-    "name": "UniResidence",
-    "slug": "UniResidence",
+    "name": "uniresidence",
+    "slug": "uniresidence",
+    "scheme": "uniresidence",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"
@@ -10,7 +11,8 @@
       "tsconfigPaths": true
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      "@react-native-google-signin/google-signin"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -25,14 +27,26 @@
     ],
     "ios": {
       "supportsTablet": true,
+      "bundleIdentifier": "com.anonymous.UniResidence",
       "config": {
         "googleMapsApiKey": "AIzaSyB_WqdyNj3Irpi0guV5rcs06JVDbP8KkjI"
-      }
+      },
+      "googleServicesFile": "./GoogleService-Info.plist"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "package": "com.anonymous.UniResidence",
+      "googleServicesFile": "./google-services.json"
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "9c952424-af72-4f36-9416-0a58cd3a769e"
       }
     }
   }
