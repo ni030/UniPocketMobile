@@ -212,7 +212,7 @@ const MeritIndex = () => {
           </View>
         </View>
       </View>
-      <ScrollView className='w-full h-auto p-8'>
+      <ScrollView className='w-full h-auto p-8 '>
         <View className='h-auto w-full flex flex-row justify-between items-center'>
           <Text className='font-semibold text-lg py-2 text-gray-500'>History</Text>
           <Pressable onPress={() => { 
@@ -239,16 +239,16 @@ const MeritIndex = () => {
         const points = meritPoints[event.role];
         
         return (
-          <View key={index} className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center gap-4'>
-            <View className='flex justify-center items-center'>
+          <View key={index} className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center'>
+            <View className='w-1/4 flex justify-center items-center '>
               <MaterialIcons name="sports-volleyball" size={64} color="#9f1239" />
             </View>
-            <View className='w-auto flex justify-center px-4'>
-              <Text className='text-xl font-semibold'>{event.eventName}</Text>
+            <View className='w-1/2 flex justify-center px-4'>
+              <Text className='text-xl font-semibold text-wrap'>{event.eventName}</Text>
               <Text className='text-base'>Date: {event.date}</Text>
               <Text className='text-base'>Role: {event.role}</Text>
             </View>
-            <View className='flex justify-center items-center'>
+            <View className='w-1/4 flex justify-center items-center'>
               <Text className='text-4xl text-rose-800 font-semibold'>+ {points}</Text>
             </View>
           </View>

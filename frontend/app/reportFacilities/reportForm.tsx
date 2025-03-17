@@ -99,11 +99,6 @@ const ReportForm = () => {
       {loading && (
         <Loader/>
       )}
-      <View className='h-1/6 w-full bg-red-800 flex justify-end'>
-        <Text className='text-4xl px-10 py-3 font-bold text-white'>
-          Make A Report
-        </Text>
-      </View>
       <ScrollView className='h-auto w-full p-8 '>
         <View className='w-full h-auto my-2 flex justify-start items-left'>
           <TouchableOpacity
@@ -191,7 +186,7 @@ const ReportForm = () => {
                     ) : (<Text>Choose Image</Text>)}
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity className='w-full h-auto mt-2 mb-12 flex justify-center items-center' onPress={handleComplaintSubmit}>
+            <TouchableOpacity className='w-full h-auto mt-2 mb-24 flex justify-center items-center' onPress={handleComplaintSubmit}>
                 <Text className='w-full h-auto bg-red-800 text-white text-center p-3 rounded-lg my-4'>
                     Submit
                 </Text>

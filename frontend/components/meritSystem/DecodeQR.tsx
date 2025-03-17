@@ -1,20 +1,21 @@
 import React, { useState } from 'react';
-import { SafeAreaView, Alert, ToastAndroid } from 'react-native';
+import { SafeAreaView, ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Button } from 'react-native-paper';
 // import { recordMerit } from '../../services/manageMerit';
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
+import { recordMerit } from 'services/meritServices';
 
-const DecodeQR = ({userId}) => {
-  const navigation = useNavigation();
+const DecodeQR = () => {
+  const navigation = useNavigation<any>(); 
 
   const pickImage = async () => {
     try {
       // Request permission to access the gallery
       const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (status !== 'granted') {
-        Alert.alert('Permission Denied', 'You need to grant media library permissions to pick an image.');
+        ToastAndroid.show("Permission to access the gallery is required.", ToastAndroid.LONG);
         return;
       }
 
@@ -31,21 +32,21 @@ const DecodeQR = ({userId}) => {
         let scannedResult = await Camera.scanFromURLAsync(uri);
         if (scannedResult.length > 0) {
           const scannedData = scannedResult[0].data;
-          const [eventData] = JSON.parse(scannedData);
-          let result = await recordMerit(userId, eventData);
-          if(result == "success"){
-            ToastAndroid.show(`Merit successfully recorded!`, ToastAndroid.LONG);
-            navigation.navigate('index');
-          }else if(result == "found"){
-            ToastAndroid.show("Fail to record. Merit already recorded!", ToastAndroid.LONG);
+          const event = JSON.parse(scannedData);
+          const result = await recordMerit(event);
+          if( result == 200){
+            ToastAndroid.show("Merit successfully recorded!", ToastAndroid.LONG);
+            navigation.navigate('MeritIndex');
+          }else if(result == "founded"){
+            ToastAndroid.show("Fail to record. Merit already recorded!", ToastAndroid.LONG)
           }
           
         } else {
-          Alert.alert('Error', 'No QR code detected in the selected image.');
+          ToastAndroid.show("No QR code found in the selected image.", ToastAndroid.LONG);
         }
       }
     } catch (error) {
-      Alert.alert('Error', 'Failed to scan the QR code from the selected image.');
+      ToastAndroid.show("Failed to pick an image.", ToastAndroid.LONG);
     }
   };
 

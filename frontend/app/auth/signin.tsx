@@ -1,20 +1,37 @@
 import { InputField } from 'components/InputField';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, TextInput, ToastAndroid, TouchableOpacity, View } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import { useNavigation } from '@react-navigation/native';
 import { signInUser } from 'services/usersServices';
 import { ErrorMessage } from 'components/ErrorMessage';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Loader from 'components/Loader';
+import { auth, checkUserSession } from "../../backendP/firebaseConfig"
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const SignIn = () => {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
   const [isEmailValid, setIsEmailValid] = useState<boolean>(true);
-
+  const [user, setUser] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const navigation = useNavigation<any>();
+
+  useEffect(() => {
+    // Check for user session on app load
+    const loadUser = async () => {
+      const storedUser = await AsyncStorage.getItem("userSession");
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+      checkUserSession(setUser);
+      setLoading(false);
+    };
+
+    loadUser();
+  }, []);
 
   // Validation functions
   const validateEmail = (email: string) => {
@@ -69,6 +86,7 @@ const SignIn = () => {
 
   return (
     <View className="flex h-full w-full items-center justify-start ">
+      {loading && <Loader />}
       <View className="flex h-1/6 w-full justify-end bg-rose-800">
         <View>
           <Text className="px-14 py-3 text-4xl font-bold text-white">Sign In</Text>

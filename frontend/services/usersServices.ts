@@ -1,23 +1,15 @@
 import { FIREBASE_API } from '@env';
 import axios from 'axios';
-import * as AuthSession from 'expo-auth-session';
-import * as Google from 'expo-auth-session/providers/google';
-import * as WebBrowser from 'expo-web-browser';
 import {
-  GoogleAuthProvider,
-  sendEmailVerification,
-  sendPasswordResetEmail,
-  signInWithCredential,
-  signInWithPopup,
-  updatePassword,
-} from 'firebase/auth';
-
-import {
-  auth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
-  db,
-} from '../backendP/firebaseConfig';
+  sendEmailVerification,
+  sendPasswordResetEmail,
+  updatePassword
+} from 'firebase/auth';
+
+import { auth } from '../backendP/firebaseConfig';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const DEVICE_IP = FIREBASE_API;
 
@@ -118,6 +110,8 @@ export const signInUser = async (email: string, password: string) => {
     if (!user.emailVerified) {
       return new Error('Please verify your email!');
     }
+
+    await AsyncStorage.setItem("userSession", JSON.stringify(user));
   } catch (error) {
     // console.error(error)
     return error;
@@ -161,6 +155,7 @@ export const changePassword = async (currentPassword: string, newPassword: strin
 export const signOutUser = async () => {
   try {
     await auth.signOut();
+    await AsyncStorage.removeItem("userSession");
   } catch (error) {
     console.error(error);
     throw error;

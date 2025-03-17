@@ -29,23 +29,23 @@ const ScanQRCode = () => {
   }, []);
 
   const handleScanSuccess = async ({ type, data }: { type: string; data: string }) => {
-    // setScanned(true);
-    // try {
-    //   const [eventData] = JSON.parse(data);
-    //   const result = await recordMerit(eventData);
-    //   console.log(result);
-    //   if (result === "success") {
-    //     ToastAndroid.show("Merit successfully recorded!", ToastAndroid.LONG);
-    //     setScanned(false);
-    //     navigation.navigate('index');
-    //   }else if(result == "found"){
-    //     ToastAndroid.show("Fail to record. Merit already recorded!", ToastAndroid.LONG);
-    //     setScanned(false);
-    //   }
-    // } catch (error) {
-    //   ToastAndroid.show("Failed to process QR code.", ToastAndroid.LONG);
-    //   setScanned(false);
-    // }
+    setScanned(true);
+    try {
+      const event = JSON.parse(data);
+      let result = await recordMerit(event);
+      if( result == 200){
+        ToastAndroid.show("Merit successfully recorded!", ToastAndroid.LONG);
+        navigation.navigate('MeritIndex');
+      }else if(result == "founded"){
+        ToastAndroid.show("Fail to record. Merit already recorded!", ToastAndroid.LONG)
+      }
+      result = '';
+    } catch (error) {
+      console.log(error);
+       ToastAndroid.show("Fail to record the merit!", ToastAndroid.LONG)
+    }finally{
+      setScanned(false);
+    }
   };
 
   if (hasPermission === null) {
@@ -71,13 +71,13 @@ const ScanQRCode = () => {
 
   return (
     <View className="flex-1 justify-end">
-      <TouchableOpacity
+      {/* <TouchableOpacity
         onPress={handleTest}
         className="absolute top-0 left-0 p-4"
       >
         <Text className='text-black'>Check Existing</Text>
-      </TouchableOpacity>
-      {/* <CameraView
+      </TouchableOpacity> */}
+      <CameraView
         onBarcodeScanned={scanned ? undefined : handleScanSuccess}
         barcodeScannerSettings={{
           barcodeTypes: ['qr'], 
@@ -87,10 +87,10 @@ const ScanQRCode = () => {
         <View className="flex-1 justify-center items-center">
           <View className="w-52 h-52 border-4 border-white bg-transparent" />
         </View>
-      </CameraView> */}
+      </CameraView>
       <View className="absolute w-1.2 h-2 border bg-slate-500"></View>
 
-      {/* <DecodeQR userId={""}/> */}
+      <DecodeQR />
     </View>
   );
 };

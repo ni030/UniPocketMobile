@@ -22,7 +22,6 @@ export const checkExistingById = async () => {
 
 export const getMeritById = async () => {
   try {
-    console.log('ip: ', DEVICE_IP);
     const userId = await auth.currentUser?.uid;
     // const userId = '42345'
     const response = await axios.get(`${DEVICE_IP}/merits/get/${userId}`);
@@ -48,7 +47,7 @@ export const checkDoesMeritExist = async (event: any) => {
     const response = await getMeritById();
 
     // Check if eventId exists in response data
-    const exists = response.data.events.some((item: any) => item?.eventId === event.eventId);
+    const exists = response.data.events.some((item: any) => item?.id === event.id);
 
     return exists; // Returns true if eventId exists, otherwise false
   } catch (error) {
@@ -103,7 +102,6 @@ const calcRanking = async (totalMerits: number) => {
 export const recordMerit = async (event: Event) => {
   try {
     const userId = await auth.currentUser?.uid;
-    // const userId = "42345"
 
     const checkExistingUser = await checkExistingById();
 

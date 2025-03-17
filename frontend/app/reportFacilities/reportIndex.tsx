@@ -39,11 +39,6 @@ const ReportIndex = () => {
   return (
     <View className='w-full h-full flex-1 justify-start items-center bg-white'>
       {loading && <Loader />}
-      <View className='h-1/6 w-full bg-red-800 flex justify-end'>
-        <Text className='text-4xl px-10 py-3 font-bold text-white'>
-          Report Facility
-        </Text>
-      </View>
       <View className='h-full w-full flex items-center justify-start p-8 gap-5'>
         <Text className='w-full px-2 text-left text-lg text-gray-700'>Make A Reporting</Text>
         <TouchableOpacity

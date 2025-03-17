@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "uniresidence",
-    "slug": "uniresidence",
-    "scheme": "uniresidence",
+    "name": "UniResidence",
+    "slug": "UniResidence",
+    "scheme": "UniResidence",
     "version": "1.0.0",
     "web": {
       "favicon": "./assets/favicon.png"

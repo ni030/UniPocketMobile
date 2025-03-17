@@ -218,7 +218,7 @@ const ReportFeedback = () => {
           </View>
         </View>
       </View>
-      <ScrollView className='w-full h-3/5 bg-white rounded-xl border-2 border-gray-200 p-8 m'>
+      <ScrollView className='w-full h-3/5 bg-white rounded-xl border-2 border-gray-200 p-8 mb-12'>
         <Text className='w-full text-lg font-medium'>Details</Text>
         <View className='w-full h-auto my-2 flex justify-start items-left'>
           <TouchableOpacity
