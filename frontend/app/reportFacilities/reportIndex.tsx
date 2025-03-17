@@ -51,32 +51,36 @@ const ReportIndex = () => {
         </TouchableOpacity>
         <Text className='w-full px-2 text-left text-lg text-gray-700'>Complaint History</Text>
         <ScrollView className='w-full h-1/2 bg-gray-100 rounded-xl flex p-6'>
-          {complaintsData.map((complaint, index) => {
-            const isPendingOrInProgress = complaint.status === 'Received' || complaint.status === 'In-progress';
-            return (
-              <TouchableOpacity
-                key={index}
-                className={`w-full h-auto flex flex-row justify-between items-center border-hairline border-gray-300 rounded-lg p-6 my-2 ${isPendingOrInProgress ? 'bg-white' : 'bg-gray-50'}`}
-                onPress={() => {
-                  navigation.navigate('ReportFeedback', { complaintId: complaint.id });
-                }}
-              >
-                <View>
-                  <Text className={`font-semibold text-xl ${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>{complaint.type}</Text>
-                  <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Complaint: {complaint.description}</Text>
-                  <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Date: {formatDate(complaint.date)}</Text>
-                  <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Status: {complaint.status}</Text>
-                </View>
-                <View>
-                  <FontAwesome
-                    name={"angle-right"}
-                    size={24}
-                    color={isPendingOrInProgress ? "gray" : "#9ca3af"}
-                  />
-                </View>
-              </TouchableOpacity>
-            );
-          })}
+          {complaintsData.length === 0 ? (
+            <Text className='text-center text-lg font-semibold text-gray-500'>No complaints found</Text>
+          ) : (
+            complaintsData.map((complaint: any, index: number) => {
+              const isPendingOrInProgress = complaint.status === 'Received' || complaint.status === 'In-progress';
+              return (
+                <TouchableOpacity
+                  key={index}
+                  className={`w-full h-auto flex flex-row justify-between items-center border-hairline border-gray-300 rounded-lg p-6 my-2 ${isPendingOrInProgress ? 'bg-white' : 'bg-gray-50'}`}
+                  onPress={() => {
+                    navigation.navigate('ReportFeedback', { complaintId: complaint.id });
+                  }}
+                >
+                  <View>
+                    <Text className={`font-semibold text-xl ${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>{complaint.type}</Text>
+                    <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Complaint: {complaint.description}</Text>
+                    <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Date: {formatDate(complaint.date)}</Text>
+                    <Text className={`${isPendingOrInProgress ? 'text-black' : 'text-gray-400'}`}>Status: {complaint.status}</Text>
+                  </View>
+                  <View>
+                    <FontAwesome
+                      name={"angle-right"}
+                      size={24}
+                      color={isPendingOrInProgress ? "gray" : "#9ca3af"}
+                    />
+                  </View>
+                </TouchableOpacity>
+              );
+            })
+          )}
         </ScrollView>
       </View>
     </View>

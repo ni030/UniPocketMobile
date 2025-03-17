@@ -29,11 +29,17 @@ const MeritIndex = () => {
   const loadData = async () => {
     setLoading(true);
     const { data } = await getMeritById();
-    const sortedData = sortAscendingByEventName(data.events, sortAscending);
-    setMeritData(sortedData);
-    setTotalMerits(data.totalMerits);
-    setRanking(data.ranking);
-    setTotalActivity(data.events.length);
+    console.log(data);
+    if (data == "null") {
+      console.log("null data");
+      setTotalMerits(0);
+    }else{
+      const sortedData = sortAscendingByEventName(data.events, sortAscending);
+      setMeritData(sortedData);
+      setTotalMerits(data.totalMerits);
+      setRanking(data.ranking);
+      setTotalActivity(data.events.length);
+    }
     setLoading(false);
 
   };
@@ -229,30 +235,35 @@ const MeritIndex = () => {
             )}
           </Pressable>
         </View>
-        {meritData.map((event: { eventName: string; date: string; role: 'Participant' | 'Committee' }, index) => {
+        {meritData.length === 0 ? (
+          <Text className='text-center text-lg font-semibold text-gray-500'>No merit history found</Text>
+        ) : (
+          meritData.map((event: { eventName: string; date: string; role: 'Participant' | 'Committee' }, index: number) => {
 
-        const meritPoints = {
-          "Participant": 1,
-          "Committee": 5,
-        }
-
-        const points = meritPoints[event.role];
-        
-        return (
-          <View key={index} className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center'>
-            <View className='w-1/4 flex justify-center items-center '>
-              <MaterialIcons name="sports-volleyball" size={64} color="#9f1239" />
-            </View>
-            <View className='w-1/2 flex justify-center px-4'>
-              <Text className='text-xl font-semibold text-wrap'>{event.eventName}</Text>
-              <Text className='text-base'>Date: {event.date}</Text>
-              <Text className='text-base'>Role: {event.role}</Text>
-            </View>
-            <View className='w-1/4 flex justify-center items-center'>
-              <Text className='text-4xl text-rose-800 font-semibold'>+ {points}</Text>
-            </View>
-          </View>
-        )})}
+            const meritPoints = {
+              "Participant": 1,
+              "Committee": 5,
+            }
+    
+            const points = meritPoints[event.role];
+            
+            return (
+              <View key={index} className='w-full h-auto p-4 bg-gray-100/70 rounded-lg border border-gray-300 my-2 flex flex-row justify-center items-center'>
+                <View className='w-1/4 flex justify-center items-center '>
+                  <MaterialIcons name="sports-volleyball" size={64} color="#9f1239" />
+                </View>
+                <View className='w-1/2 flex justify-center px-4'>
+                  <Text className='text-xl font-semibold text-wrap'>{event.eventName}</Text>
+                  <Text className='text-base'>Date: {event.date}</Text>
+                  <Text className='text-base'>Role: {event.role}</Text>
+                </View>
+                <View className='w-1/4 flex justify-center items-center'>
+                  <Text className='text-4xl text-rose-800 font-semibold'>+ {points}</Text>
+                </View>
+              </View>
+            )
+          })
+        )}
       </ScrollView>
     </View>
   )

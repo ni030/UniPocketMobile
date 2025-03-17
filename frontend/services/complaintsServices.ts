@@ -31,7 +31,11 @@ export const getAllComplaints = async () => {
   try {
     const user = await auth.currentUser;
     const response = await axios.get(`${DEVICE_IP}/complaints/${user?.uid}`);
-    return response.data;
+    if(response.status === 204){
+      return {data: []};
+    }else{
+      return response.data;
+    }
   } catch (error) {
     console.error(error);
     throw error;

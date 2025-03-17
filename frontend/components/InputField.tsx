@@ -13,11 +13,12 @@ export const InputField: React.FC<InputFieldProps> = ({ placeholder, value, onCh
       <TextInput
         editable
         multiline
+        numberOfLines={2}
         maxLength={50}
         value={value}
         onChangeText={onChangeText}
         placeholder= {placeholder}
-        className='h-auto w-4/5 m-5 bg-white text-lg text-black border-b-2 border-b-gray-400 rounded-sm px-4'
+        className='h-auto w-4/5 m-5 bg-white text-lg text-black border-b-2 border-b-gray-400 rounded-sm px-4 '
       />
     </View>
   );

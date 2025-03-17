@@ -23,9 +23,13 @@ export const checkExistingById = async () => {
 export const getMeritById = async () => {
   try {
     const userId = await auth.currentUser?.uid;
-    // const userId = '42345'
     const response = await axios.get(`${DEVICE_IP}/merits/get/${userId}`);
-    return response.data;
+    if(response.status === 204){
+      return {data: 'null'};
+    }else{
+      return response.data;
+    }
+  
   } catch (error) {
     console.error(error);
     throw error;

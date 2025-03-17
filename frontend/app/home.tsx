@@ -18,7 +18,12 @@ const Home = () => {
     const loadData = async () => {
         setLoading(true);
         const { data } = await getMeritById();
-        setTotalMerit(data.totalMerits)
+        if(data == "null"){
+          setTotalMerit(0);
+        }else{
+  
+          setTotalMerit(data.totalMerits);
+        }
         setLoading(false);
 
       };
