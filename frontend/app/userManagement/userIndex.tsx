@@ -37,21 +37,29 @@ const UserIndex = () => {
   const [isRoomValid, setIsRoomValid] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchUserDetails = async () => {
-      try {
-        setLoading(true);
-        const { data } = await getUserDetails();
-        setName(data.name);
-        setPhoneNum(data.phoneNum);
-        setBlock(data.block);
-        setRoom(data.room);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-      }
-    };
     fetchUserDetails();
   }, []);
+
+  const fetchUserDetails = async () => {
+    try {
+      setLoading(true);
+      const { data } = await getUserDetails();
+      setName(data.name);
+      setPhoneNum(data.phoneNum);
+      setBlock(data.block);
+      setRoom(data.room);
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleCloseModal = async () => {
+    await fetchUserDetails();
+    setProfileModalVisible(!profileModalVisible);
+    ToastAndroid.show('Profile update discarded!', ToastAndroid.SHORT);
+  }
+
 
   const handleUpdateProfile = async () => {
     if (isPhoneNumValid && isRoomValid) {
@@ -159,7 +167,7 @@ const UserIndex = () => {
             <View className="flex h-auto w-4/5 items-center justify-center gap-3 rounded-lg bg-white p-8">
               <View className="f-1/6 flex w-full flex-row items-center justify-between p-2">
                 <Text className="text-2xl font-semibold">Edit Profile</Text>
-                <Pressable onPress={() => setProfileModalVisible(!profileModalVisible)}>
+                <Pressable onPress={handleCloseModal}>
                   <FontAwesome6 name="xmark" size={18} color="black" />
                 </Pressable>
               </View>

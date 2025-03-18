@@ -108,6 +108,7 @@ export const recordMerit = async (event: Event) => {
     const userId = await auth.currentUser?.uid;
 
     const checkExistingUser = await checkExistingById();
+    console.log(checkExistingUser);
 
     if (checkExistingUser) {
       const checkExistingMerit = await checkDoesMeritExist(event);

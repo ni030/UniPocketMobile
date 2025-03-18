@@ -69,7 +69,7 @@ const Home = () => {
           <TouchableOpacity className='p-4 bg-rose-800 rounded-full' onPress={() => navigation.navigate('FacilityIndex')}>
           <AntDesign name="find"size={32} color="#fff" />
           </TouchableOpacity>
-          <Text className='text-sm font-medium text-rose-800'>FInd Facility</Text>
+          <Text className='text-sm font-medium text-rose-800'>Search Facility</Text>
         </View>
       </View>
       <View className='w-full h-auto flex p-4'>

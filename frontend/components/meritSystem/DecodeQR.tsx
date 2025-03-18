@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { SafeAreaView, ToastAndroid } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Button } from 'react-native-paper';
-// import { recordMerit } from '../../services/manageMerit';
 import { Camera } from 'expo-camera';
 import { useNavigation } from '@react-navigation/native';
 import { recordMerit } from 'services/meritServices';
@@ -33,7 +32,9 @@ const DecodeQR = () => {
         if (scannedResult.length > 0) {
           const scannedData = scannedResult[0].data;
           const event = JSON.parse(scannedData);
+          console.log(event);
           const result = await recordMerit(event);
+          console.log(result);
           if( result == 200){
             ToastAndroid.show("Merit successfully recorded!", ToastAndroid.LONG);
             navigation.navigate('MeritIndex');

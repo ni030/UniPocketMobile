@@ -98,9 +98,8 @@ const SignIn = () => {
         </Text>
         <InputField placeholder="Email" value={email} onChangeText={handleEmailChange} />
         {!isEmailValid && <ErrorMessage message="Please enter a valid email address." />}
-        <View className="m-5 flex h-auto w-4/5 flex-row items-center justify-center rounded-sm border-b-2 border-b-gray-400 bg-white px-4 text-black">
+        <View className="h-auto w-4/5 m-5 bg-white text-lg text-black border-b-2 border-b-gray-400 rounded-xl px-4 py-1 flex flex-row items-center justify-between">
           <TextInput
-            className="h-auto flex-1 text-lg"
             placeholder="Password"
             value={password}
             onChangeText={setPassword}

@@ -4,7 +4,7 @@ const dotenv = require("dotenv");
 const axios = require("axios");
 dotenv.config();
 
-const IMAGEKIT_PRIVATE_KEY = process.env.IMAGEKIT_PRIVATE_KEY;
+const IMAGEKIT_PRIVATE_KEY = "private_qqQ8XN4ZWucmdxheR+qUOJK2WDo=";
 const IMAGEKIT_URL = "https://upload.imagekit.io/api/v1/files/upload";
 
 const complaintsController = {

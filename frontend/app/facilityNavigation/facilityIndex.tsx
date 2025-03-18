@@ -4,7 +4,6 @@ import { GestureHandlerRootView, Pressable, TextInput } from 'react-native-gestu
 import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
 import MapView, { Marker } from 'react-native-maps';
 import * as Location from 'expo-location';
-import AntDesign from '@expo/vector-icons/AntDesign';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { getAllFacilities } from 'services/facilitiesServices';
